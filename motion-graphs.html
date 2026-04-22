@@ -1,0 +1,1261 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Motion Graph Lab</title>
+  <style>
+    :root {
+      --bg: #f5f1e7;
+      --panel: rgba(255, 252, 247, 0.86);
+      --ink: #1f2a2e;
+      --muted: #617075;
+      --accent: #117a8b;
+      --accent-2: #e69a12;
+      --accent-3: #db6c37;
+      --line: rgba(31, 42, 46, 0.1);
+      --shadow: 0 22px 44px rgba(34, 42, 48, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(230, 154, 18, 0.17), transparent 24%),
+        radial-gradient(circle at 85% 14%, rgba(17, 122, 139, 0.16), transparent 22%),
+        linear-gradient(160deg, #faf7f0 0%, #ece4d4 100%);
+    }
+
+    .shell {
+      width: min(1240px, calc(100% - 24px));
+      margin: 14px auto 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero,
+    .panel,
+    .segment-card {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.6vw, 4rem);
+      line-height: 0.94;
+      margin-bottom: 14px;
+      max-width: 11ch;
+    }
+
+    .hero p,
+    .subtle {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+      align-content: center;
+    }
+
+    .hero-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .button-link:active {
+      transform: scale(0.985);
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(248,243,234,0.9));
+      border: 1px solid var(--line);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+    }
+
+    .formula-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .fraction {
+      display: inline-grid;
+      grid-template-rows: auto auto;
+      justify-items: center;
+      align-items: center;
+      line-height: 1.15;
+    }
+
+    .fraction .top,
+    .fraction .bottom {
+      display: block;
+      white-space: nowrap;
+      padding: 0 6px;
+    }
+
+    .fraction .top {
+      border-bottom: 1.5px solid rgba(31, 42, 46, 0.45);
+      padding-bottom: 2px;
+    }
+
+    .fraction .bottom {
+      padding-top: 2px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .tabs button,
+    .actions button,
+    .preset-bar button {
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .tabs button {
+      min-height: 56px;
+      padding: 0 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .tabs button.active {
+      background: rgba(17, 122, 139, 0.14);
+      box-shadow: inset 0 0 0 2px rgba(17, 122, 139, 0.24);
+      color: var(--accent);
+    }
+
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .preset-bar button,
+    .actions button {
+      min-height: 46px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent), #1a97aa) !important;
+      color: #fff !important;
+      box-shadow: 0 14px 26px rgba(17, 122, 139, 0.2);
+    }
+
+    .segment-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .segment-card {
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .segment-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .segment-top strong {
+      font-size: 1rem;
+    }
+
+    .segment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(31, 42, 46, 0.12);
+      padding: 0 12px;
+      font: inherit;
+      color: var(--ink);
+      background: rgba(255,255,255,0.94);
+    }
+
+    .delete-btn {
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(219, 108, 55, 0.12);
+      color: var(--accent-3);
+      border: 1px solid rgba(219, 108, 55, 0.15);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .right-col {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(248,243,234,0.88));
+      border: 1px solid var(--line);
+    }
+
+    .stat small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat strong {
+      font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+      line-height: 1.06;
+    }
+
+    .chart-wrap {
+      border-radius: 22px;
+      padding: 14px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(247,241,231,0.94)),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0,
+          transparent 67px,
+          rgba(31, 42, 46, 0.03) 67px,
+          rgba(31, 42, 46, 0.03) 68px
+        );
+      border: 1px solid var(--line);
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.74), rgba(244,238,228,0.88));
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .calc-box {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid var(--line);
+    }
+
+    .calc-box h3 {
+      margin-bottom: 6px;
+    }
+
+    .calc-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .result {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(17, 122, 139, 0.08);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .result-line + .result-line {
+      margin-top: 8px;
+    }
+
+    .result-segment-formula {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .result-main-formula {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .result .formula-display {
+      color: var(--ink);
+      font-weight: 500;
+      gap: 6px;
+    }
+
+    .result .fraction {
+      font-size: 0.98em;
+    }
+
+    .result .fraction .top,
+    .result .fraction .bottom {
+      padding: 0 4px;
+    }
+
+    .formula-box {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(230, 154, 18, 0.1);
+      border: 1px solid rgba(230, 154, 18, 0.14);
+      font-weight: 700;
+    }
+
+    @media (max-width: 1180px) {
+      .hero,
+      .layout,
+      .calc-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 12px, 100%);
+        margin: 8px auto 18px;
+      }
+
+      .hero,
+      .panel {
+        padding: 16px;
+        border-radius: 20px;
+      }
+
+      .segment-grid,
+      .calc-fields,
+      .actions,
+      .tabs,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Motion Graphs</div>
+        <h1>Speed-Time and Distance-Time Lab</h1>
+        <p>
+          Motion graphs show how speed or distance changes over time. In a speed-time graph, the area under the graph
+          gives distance. In a distance-time graph, the slope shows speed.
+        </p>
+        <div class="hero-actions">
+          <a class="button-link" href="./index.html">Return to Home</a>
+        </div>
+        <div class="formula-box" id="modeFormula">Speed-time graph: distance = area under the graph.</div>
+      </div>
+      <div class="hero-side">
+        <div class="mini-card">
+          <strong>Average speed</strong>
+          <span class="formula-display">
+            <span>average speed =</span>
+            <span class="fraction">
+              <span class="top">change in distance</span>
+              <span class="bottom">change in time</span>
+            </span>
+          </span>
+        </div>
+        <div class="mini-card">
+          <strong>Distance from speed-time graph</strong>
+          <span class="subtle">distance = area under the speed-time graph</span>
+        </div>
+        <div class="mini-card">
+          <strong>Acceleration</strong>
+          <span class="formula-display">
+            <span>acceleration =</span>
+            <span class="fraction">
+              <span class="top">change in speed</span>
+              <span class="bottom">change in time</span>
+            </span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="panel">
+        <h2>Build Graph</h2>
+        <p class="subtle">Choose a graph type, then add or edit time intervals. Segments should not overlap.</p>
+
+        <div class="tabs">
+          <button type="button" id="speedTab" class="active">Speed-Time</button>
+          <button type="button" id="distanceTab">Distance-Time</button>
+        </div>
+
+        <div class="preset-bar">
+          <button type="button" id="presetUniform">Uniform Motion</button>
+          <button type="button" id="presetJourney">Stop and Go</button>
+          <button type="button" id="presetAccel">Accelerating Trip</button>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="primary" id="addSegment">Add Segment</button>
+          <button type="button" id="resetGraph">Reset</button>
+        </div>
+
+        <div class="segment-list" id="segmentList"></div>
+      </aside>
+
+      <div class="right-col">
+        <section class="panel">
+          <h2 id="graphHeading">Speed-Time Graph</h2>
+          <p class="subtle" id="graphDescription">Total distance is the area under the graph. For each segment, use trapezium area when speed changes linearly.</p>
+
+          <div class="stats">
+            <div class="stat">
+              <small>Total time</small>
+              <strong id="statTime">0 s</strong>
+            </div>
+            <div class="stat">
+              <small>Total distance</small>
+              <strong id="statDistance">0 m</strong>
+            </div>
+            <div class="stat">
+              <small>Average speed</small>
+              <strong id="statAverage">0 m/s</strong>
+            </div>
+            <div class="stat">
+              <small>Number of segments</small>
+              <strong id="statSegments">0</strong>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="graphCanvas" width="920" height="460" aria-label="Motion graph"></canvas>
+          </div>
+
+          <div class="legend">
+            <span><span class="dot" style="background:#117a8b;"></span><span id="legendMain">Graph line</span></span>
+            <span><span class="dot" style="background:#e69a12;"></span>Segment break</span>
+            <span><span class="dot" style="background:#db6c37;"></span>Calculation guide</span>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Calculation Panel</h2>
+          <div class="calc-grid">
+            <div class="calc-box">
+              <h3 id="calcTitle">Speed-Time: Total Distance</h3>
+              <p class="subtle" id="calcDescription">For G10, distance comes from the area under the speed-time graph.</p>
+              <div class="calc-fields">
+                <div class="field">
+                  <label for="calcFrom">From time</label>
+                  <input id="calcFrom" type="number" step="0.1" min="0" value="0">
+                </div>
+                <div class="field">
+                  <label for="calcTo">To time</label>
+                  <input id="calcTo" type="number" step="0.1" min="0" value="20">
+                </div>
+              </div>
+              <div class="result" id="calcResultA">Add or edit segments to see the worked result.</div>
+              <div class="result" id="calcAccelerationFormula">
+                <span class="formula-display">
+                  <span>Acceleration =</span>
+                  <span class="fraction">
+                    <span class="top">final speed - start speed</span>
+                    <span class="bottom">change in time</span>
+                  </span>
+                </span>
+              </div>
+              <div class="result" id="calcAcceleration">Set a valid time interval to see the acceleration value.</div>
+            </div>
+
+            <div class="calc-box">
+              <h3>Teacher Note</h3>
+              <p class="subtle">Each segment is piecewise. For speed-time, acceleration is constant inside each interval, so speed changes in a straight line. For distance-time, each segment uses a constant speed so distance changes linearly.</p>
+              <div class="result" id="calcResultB">Start with a preset, or build your own journey using intervals like 0-10, 10-20, and 20-35.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const elements = {
+      speedTab: document.getElementById("speedTab"),
+      distanceTab: document.getElementById("distanceTab"),
+      presetUniform: document.getElementById("presetUniform"),
+      presetJourney: document.getElementById("presetJourney"),
+      presetAccel: document.getElementById("presetAccel"),
+      addSegment: document.getElementById("addSegment"),
+      resetGraph: document.getElementById("resetGraph"),
+      segmentList: document.getElementById("segmentList"),
+      graphHeading: document.getElementById("graphHeading"),
+      graphDescription: document.getElementById("graphDescription"),
+      modeFormula: document.getElementById("modeFormula"),
+      legendMain: document.getElementById("legendMain"),
+      statTime: document.getElementById("statTime"),
+      statDistance: document.getElementById("statDistance"),
+      statAverage: document.getElementById("statAverage"),
+      statSegments: document.getElementById("statSegments"),
+      calcTitle: document.getElementById("calcTitle"),
+      calcDescription: document.getElementById("calcDescription"),
+      calcFrom: document.getElementById("calcFrom"),
+      calcTo: document.getElementById("calcTo"),
+      calcResultA: document.getElementById("calcResultA"),
+      calcAccelerationFormula: document.getElementById("calcAccelerationFormula"),
+      calcAcceleration: document.getElementById("calcAcceleration"),
+      calcResultB: document.getElementById("calcResultB"),
+      canvas: document.getElementById("graphCanvas")
+    };
+
+    const ctx = elements.canvas.getContext("2d");
+
+    let state = {
+      mode: "speed",
+      segments: [
+        { id: 1, start: 0, end: 10, v0: 0, v1: 20, d0: 0, speed: 5 },
+        { id: 2, start: 10, end: 20, v0: 20, v1: 20, d0: 50, speed: 20 }
+      ],
+      nextId: 3
+    };
+
+    function formatNumber(value) {
+      return Number(value).toFixed(2).replace(/\.00$/, "");
+    }
+
+    function fractionHtml(top, bottom) {
+      return '<span class="fraction"><span class="top">' + top + '</span><span class="bottom">' + bottom + '</span></span>';
+    }
+
+    function formatTime(value) {
+      return formatNumber(value) + " s";
+    }
+
+    function formatDistance(value) {
+      return formatNumber(value) + " m";
+    }
+
+    function formatSpeed(value) {
+      return formatNumber(value) + " m/s";
+    }
+
+    function cloneSegments(list) {
+      return list.map((segment) => ({ ...segment }));
+    }
+
+    function getSortedSegments() {
+      return cloneSegments(state.segments).sort((a, b) => a.start - b.start);
+    }
+
+    function syncCalculationRange(forceToEnd = false) {
+      const segments = getSortedSegments();
+      if (!segments.length) {
+        return;
+      }
+      const minStart = segments[0].start;
+      const maxEnd = segments[segments.length - 1].end;
+      const currentFrom = Number(elements.calcFrom.value);
+      const currentTo = Number(elements.calcTo.value);
+
+      if (!Number.isFinite(currentFrom) || currentFrom < minStart) {
+        elements.calcFrom.value = minStart;
+      }
+
+      if (forceToEnd || !Number.isFinite(currentTo) || currentTo > maxEnd) {
+        elements.calcTo.value = maxEnd;
+      }
+    }
+
+    function getSegmentFinalSpeed(segment) {
+      if (typeof segment.v1 === "number") {
+        return segment.v1;
+      }
+      return segment.v0 + (segment.a || 0) * (segment.end - segment.start);
+    }
+
+    function getSegmentFinalDistance(segment) {
+      if (typeof segment.d1 === "number") {
+        return segment.d1;
+      }
+      return segment.d0 + (segment.speed || 0) * (segment.end - segment.start);
+    }
+
+    function evaluateSpeedSegment(segment, t) {
+      const duration = segment.end - segment.start;
+      const finalSpeed = getSegmentFinalSpeed(segment);
+      if (duration === 0) {
+        return finalSpeed;
+      }
+      const progress = (t - segment.start) / duration;
+      return segment.v0 + (finalSpeed - segment.v0) * progress;
+    }
+
+    function evaluateDistanceSegment(segment, t) {
+      const duration = segment.end - segment.start;
+      const finalDistance = getSegmentFinalDistance(segment);
+      if (duration === 0) {
+        return finalDistance;
+      }
+      const progress = (t - segment.start) / duration;
+      return segment.d0 + (finalDistance - segment.d0) * progress;
+    }
+
+    function segmentDistance(segment) {
+      if (state.mode === "speed") {
+        const duration = segment.end - segment.start;
+        const v1 = evaluateSpeedSegment(segment, segment.end);
+        return ((segment.v0 + v1) / 2) * duration;
+      }
+      return getSegmentFinalDistance(segment) - segment.d0;
+    }
+
+    function segmentEndDistance(segment) {
+      if (state.mode === "distance") {
+        return evaluateDistanceSegment(segment, segment.end);
+      }
+      return segmentDistance(segment);
+    }
+
+    function getOverallStats() {
+      const segments = getSortedSegments();
+      if (!segments.length) {
+        return { totalTime: 0, totalDistance: 0, averageSpeed: 0 };
+      }
+
+      const totalTime = segments[segments.length - 1].end - segments[0].start;
+      let totalDistance = 0;
+
+      segments.forEach((segment) => {
+        if (state.mode === "speed") {
+          totalDistance += segmentDistance(segment);
+        }
+      });
+
+      if (state.mode === "distance") {
+        const first = segments[0];
+        const last = segments[segments.length - 1];
+        totalDistance = evaluateDistanceSegment(last, last.end) - evaluateDistanceSegment(first, first.start);
+      }
+
+      return {
+        totalTime,
+        totalDistance,
+        averageSpeed: totalTime > 0 ? totalDistance / totalTime : 0
+      };
+    }
+
+    function getGraphPoints() {
+      const segments = getSortedSegments();
+      const points = [];
+
+      segments.forEach((segment) => {
+        if (state.mode === "speed") {
+          points.push(
+            { t: segment.start, y: evaluateSpeedSegment(segment, segment.start) },
+            { t: segment.end, y: evaluateSpeedSegment(segment, segment.end) }
+          );
+        } else {
+          points.push(
+            { t: segment.start, y: evaluateDistanceSegment(segment, segment.start) },
+            { t: segment.end, y: evaluateDistanceSegment(segment, segment.end) }
+          );
+        }
+      });
+
+      return points;
+    }
+
+    function interpolateAtTime(t) {
+      const segments = getSortedSegments();
+      for (const segment of segments) {
+        if (t >= segment.start && t <= segment.end) {
+          if (state.mode === "speed") {
+            return evaluateSpeedSegment(segment, t);
+          }
+          return evaluateDistanceSegment(segment, t);
+        }
+      }
+      return null;
+    }
+
+    function computeRangeCalculation(from, to) {
+      const start = Math.min(from, to);
+      const end = Math.max(from, to);
+      const segments = getSortedSegments().filter((segment) => !(segment.end <= start || segment.start >= end));
+
+      if (!segments.length) {
+        return null;
+      }
+
+      if (state.mode === "speed") {
+        let distance = 0;
+        const steps = [];
+        const accelerationSteps = [];
+
+        segments.forEach((segment) => {
+          const localStart = Math.max(start, segment.start);
+          const localEnd = Math.min(end, segment.end);
+          const vStart = evaluateSpeedSegment(segment, localStart);
+          const vEnd = evaluateSpeedSegment(segment, localEnd);
+          const duration = localEnd - localStart;
+          const partDistance = ((vStart + vEnd) / 2) * duration;
+          distance += partDistance;
+          steps.push(
+            '<div class="result-line">Segment ' + formatNumber(localStart) + "-" + formatNumber(localEnd) +
+            ':<span class="result-segment-formula">Area = <span class="formula-display">' +
+            fractionHtml("( " + formatNumber(vStart) + " + " + formatNumber(vEnd) + " )", "2") +
+            '<span>x ' + formatNumber(duration) + '</span>' +
+            '</span> = ' + formatNumber(partDistance) + ' m</span></div>'
+          );
+          if (duration > 0) {
+            const acceleration = (vEnd - vStart) / duration;
+            accelerationSteps.push(
+              '<div class="result-line">Segment ' + formatNumber(localStart) + "-" + formatNumber(localEnd) +
+              ': a = ' + formatNumber(acceleration) + ' m/s²</div>'
+            );
+          }
+        });
+
+        return {
+          main: "Total distance from " + formatNumber(start) + " s to " + formatNumber(end) + " s = " + formatNumber(distance) + " m",
+          detail: steps.join(""),
+          accelerationDetail: accelerationSteps.join("")
+        };
+      }
+
+      const yStart = interpolateAtTime(start);
+      const yEnd = interpolateAtTime(end);
+      if (yStart === null || yEnd === null || end === start) {
+        return null;
+      }
+      const average = (yEnd - yStart) / (end - start);
+      return {
+        main: 'Average speed from ' + formatNumber(start) + ' s to ' + formatNumber(end) + ' s<span class="result-main-formula">= <span class="formula-display">' +
+          fractionHtml(formatNumber(yEnd) + ' - ' + formatNumber(yStart), formatNumber(end) + ' - ' + formatNumber(start)) +
+          '</span> = ' + formatNumber(average) + ' m/s</span>',
+        detail: "On a distance-time graph, average speed is the gradient between the two chosen times.",
+        accelerationDetail: ""
+      };
+    }
+
+    function renderSegments() {
+      const modeFields = state.mode === "speed"
+        ? [
+            { key: "v0", label: "Start speed (m/s)" },
+            { key: "v1", label: "Final speed (m/s)" }
+          ]
+        : [
+            { key: "d0", label: "Start distance (m)" },
+            { key: "d1", label: "Final distance (m)" }
+          ];
+
+      elements.segmentList.innerHTML = getSortedSegments().map((segment, index) => `
+        <div class="segment-card">
+          <div class="segment-top">
+            <strong>Segment ${index + 1}</strong>
+            <button type="button" class="delete-btn" data-delete="${segment.id}">Delete</button>
+          </div>
+          <div class="segment-grid">
+            <div class="field">
+              <label>Start time</label>
+              <input type="number" step="0.1" value="${segment.start}" data-id="${segment.id}" data-key="start">
+            </div>
+            <div class="field">
+              <label>End time</label>
+              <input type="number" step="0.1" value="${segment.end}" data-id="${segment.id}" data-key="end">
+            </div>
+            <div class="field">
+              <label>${modeFields[0].label}</label>
+              <input type="number" step="0.1" value="${segment[modeFields[0].key]}" data-id="${segment.id}" data-key="${modeFields[0].key}">
+            </div>
+            <div class="field">
+              <label>${modeFields[1].label}</label>
+              <input type="number" step="0.1" value="${segment[modeFields[1].key]}" data-id="${segment.id}" data-key="${modeFields[1].key}">
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      elements.segmentList.querySelectorAll("input").forEach((input) => {
+        input.addEventListener("input", (event) => {
+          const id = Number(event.target.dataset.id);
+          const key = event.target.dataset.key;
+          const value = Number(event.target.value);
+          state.segments = state.segments.map((segment) => segment.id === id ? { ...segment, [key]: value } : segment);
+          syncCalculationRange(false);
+          refresh();
+        });
+      });
+
+      elements.segmentList.querySelectorAll("[data-delete]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = Number(button.dataset.delete);
+          state.segments = state.segments.filter((segment) => segment.id !== id);
+          syncCalculationRange(false);
+          refresh();
+        });
+      });
+    }
+
+    function drawGraph() {
+      const rect = elements.canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      const width = Math.floor(rect.width * ratio);
+      const height = Math.floor((rect.width * 0.52) * ratio);
+      elements.canvas.width = width;
+      elements.canvas.height = height;
+
+      const padding = { top: 26 * ratio, right: 24 * ratio, bottom: 52 * ratio, left: 84 * ratio };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.font = (12 * ratio) + 'px "Trebuchet MS", sans-serif';
+      ctx.lineWidth = 1 * ratio;
+
+      const points = getGraphPoints();
+      const segments = getSortedSegments();
+      if (!points.length || !segments.length) {
+        ctx.fillStyle = "rgba(97,112,117,0.9)";
+        ctx.fillText("Add a segment to draw the graph.", 24 * ratio, 40 * ratio);
+        return;
+      }
+
+      const maxTime = Math.max(...points.map((point) => point.t));
+      const minTime = Math.min(...points.map((point) => point.t));
+      const maxY = Math.max(...points.map((point) => point.y), 0);
+      const minY = Math.min(...points.map((point) => point.y), 0);
+      const yPadding = Math.max(1, (maxY - minY) * 0.12);
+      const graphMinY = 0;
+      const graphMaxY = maxY + yPadding;
+
+      const yTicks = 6;
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      for (let i = 0; i <= yTicks; i += 1) {
+        const value = graphMinY + ((graphMaxY - graphMinY) * i) / yTicks;
+        const y = padding.top + chartHeight - (i / yTicks) * chartHeight;
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(width - padding.right, y);
+        ctx.strokeStyle = Math.abs(value) < (graphMaxY - graphMinY) / 40 ? "rgba(31,42,46,0.22)" : "rgba(31,42,46,0.08)";
+        ctx.stroke();
+        ctx.fillStyle = "rgba(97,112,117,0.94)";
+        ctx.fillText(formatNumber(value), padding.left - 14 * ratio, y);
+      }
+
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      const xStep = maxTime <= 20 ? 1 : maxTime <= 40 ? 2 : 5;
+      for (let time = minTime; time <= maxTime; time += 1) {
+        const x = padding.left + ((time - minTime) / (maxTime - minTime || 1)) * chartWidth;
+        ctx.beginPath();
+        ctx.moveTo(x, padding.top);
+        ctx.lineTo(x, padding.top + chartHeight);
+        ctx.strokeStyle = "rgba(31,42,46,0.05)";
+        ctx.stroke();
+        if (Math.round(time) % xStep === 0 || Math.abs(time - maxTime) < 0.01) {
+          ctx.fillStyle = "rgba(97,112,117,0.94)";
+          ctx.fillText(String(Math.round(time)), x, height - 30 * ratio);
+        }
+      }
+
+      function mapX(value) {
+        return padding.left + ((value - minTime) / (maxTime - minTime || 1)) * chartWidth;
+      }
+
+      function mapY(value) {
+        return padding.top + chartHeight - ((value - graphMinY) / (graphMaxY - graphMinY || 1)) * chartHeight;
+      }
+
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const x = mapX(point.t);
+        const y = mapY(point.y);
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      ctx.strokeStyle = "#117a8b";
+      ctx.lineWidth = 4 * ratio;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.stroke();
+
+      points.forEach((point) => {
+        ctx.beginPath();
+        ctx.arc(mapX(point.t), mapY(point.y), 5 * ratio, 0, Math.PI * 2);
+        ctx.fillStyle = "#e69a12";
+        ctx.fill();
+      });
+
+      if (state.mode === "speed") {
+        const from = Number(elements.calcFrom.value);
+        const to = Number(elements.calcTo.value);
+        const calc = computeRangeCalculation(from, to);
+        if (calc) {
+          const yBase = mapY(0);
+          const plotPoints = [];
+          const step = Math.max(0.2, (to - from) / 40);
+          for (let t = from; t <= to + 0.001; t += step) {
+            const value = interpolateAtTime(Math.min(t, to));
+            if (value !== null) {
+              plotPoints.push({ t: Math.min(t, to), y: value });
+            }
+          }
+          if (plotPoints.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(mapX(plotPoints[0].t), yBase);
+            plotPoints.forEach((point) => {
+              ctx.lineTo(mapX(point.t), mapY(point.y));
+            });
+            ctx.lineTo(mapX(plotPoints[plotPoints.length - 1].t), yBase);
+            ctx.closePath();
+            ctx.fillStyle = "rgba(219, 108, 55, 0.14)";
+            ctx.fill();
+          }
+        }
+      } else {
+        const from = Number(elements.calcFrom.value);
+        const to = Number(elements.calcTo.value);
+        const yStart = interpolateAtTime(from);
+        const yEnd = interpolateAtTime(to);
+        if (yStart !== null && yEnd !== null) {
+          ctx.beginPath();
+          ctx.moveTo(mapX(from), mapY(yStart));
+          ctx.lineTo(mapX(to), mapY(yEnd));
+          ctx.strokeStyle = "#db6c37";
+          ctx.lineWidth = 3 * ratio;
+          ctx.setLineDash([8 * ratio, 6 * ratio]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+
+      ctx.fillStyle = "#1f2a2e";
+      ctx.font = (14 * ratio) + 'px "Trebuchet MS", sans-serif';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText("Time (s)", width / 2, height - 8 * ratio);
+      ctx.save();
+      ctx.translate(24 * ratio, height / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(state.mode === "speed" ? "Speed (m/s)" : "Distance (m)", 0, 0);
+      ctx.restore();
+    }
+
+    function updateText() {
+      if (state.mode === "speed") {
+        elements.graphHeading.textContent = "Speed-Time Graph";
+        elements.graphDescription.textContent = "Total distance is the area under the graph. For each segment, use trapezium area when speed changes linearly.";
+        elements.modeFormula.textContent = "Speed-time graph: distance = area under the graph.";
+        elements.legendMain.textContent = "Speed graph";
+        elements.calcTitle.textContent = "Speed-Time: Total Distance";
+        elements.calcDescription.textContent = "For G10, distance comes from the area under the speed-time graph.";
+        elements.calcAccelerationFormula.style.display = "";
+        elements.calcAcceleration.style.display = "";
+      } else {
+        elements.graphHeading.textContent = "Distance-Time Graph";
+        elements.graphDescription.textContent = "Average speed comes from the gradient between two points on the distance-time graph.";
+        elements.modeFormula.textContent = "Distance-time graph: average speed = gradient.";
+        elements.legendMain.textContent = "Distance graph";
+        elements.calcTitle.textContent = "Distance-Time: Average Speed";
+        elements.calcDescription.textContent = "Use the gradient between two times: average speed = change in distance / change in time.";
+        elements.calcAccelerationFormula.style.display = "none";
+        elements.calcAcceleration.style.display = "none";
+      }
+    }
+
+    function updateStats() {
+      const stats = getOverallStats();
+      elements.statTime.textContent = formatTime(stats.totalTime);
+      elements.statDistance.textContent = formatDistance(stats.totalDistance);
+      elements.statAverage.textContent = formatSpeed(stats.averageSpeed);
+      elements.statSegments.textContent = String(state.segments.length);
+    }
+
+    function updateCalculation() {
+      const from = Number(elements.calcFrom.value);
+      const to = Number(elements.calcTo.value);
+      const calc = computeRangeCalculation(from, to);
+      if (!calc) {
+        elements.calcResultA.textContent = "Choose a valid interval inside the graph to see the worked result.";
+        elements.calcAcceleration.textContent = "Set a valid time interval to see the acceleration value.";
+        elements.calcResultB.textContent = "Make sure your time interval lies inside the piecewise graph.";
+        return;
+      }
+      elements.calcResultA.innerHTML = calc.main;
+      elements.calcAcceleration.innerHTML = state.mode === "speed"
+        ? calc.accelerationDetail
+        : "";
+      elements.calcResultB.innerHTML = calc.detail;
+    }
+
+    function refresh() {
+      elements.speedTab.classList.toggle("active", state.mode === "speed");
+      elements.distanceTab.classList.toggle("active", state.mode === "distance");
+      renderSegments();
+      updateText();
+      updateStats();
+      updateCalculation();
+      drawGraph();
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      if (mode === "speed") {
+        state.segments = [
+          { id: 1, start: 0, end: 10, v0: 0, v1: 20, d0: 0, speed: 5 },
+          { id: 2, start: 10, end: 20, v0: 20, v1: 20, d0: 50, speed: 20 }
+        ];
+        state.nextId = 3;
+        elements.calcFrom.value = 0;
+        elements.calcTo.value = 20;
+      } else {
+        state.segments = [
+          { id: 1, start: 0, end: 10, v0: 0, v1: 0, d0: 0, d1: 40 },
+          { id: 2, start: 10, end: 20, v0: 0, v1: 0, d0: 40, d1: 120 }
+        ];
+        state.nextId = 3;
+        elements.calcFrom.value = 0;
+        elements.calcTo.value = 20;
+      }
+      syncCalculationRange(true);
+      refresh();
+    }
+
+    function addSegment() {
+      const sorted = getSortedSegments();
+      const lastSegment = sorted.length ? sorted[sorted.length - 1] : null;
+      const lastEnd = lastSegment ? lastSegment.end : 0;
+      state.segments.push(
+        state.mode === "speed"
+          ? {
+              id: state.nextId,
+              start: lastEnd,
+              end: lastEnd + 10,
+              v0: lastSegment ? evaluateSpeedSegment(lastSegment, lastSegment.end) : 0,
+              v1: 0,
+              d0: 0,
+              d1: 0
+            }
+          : {
+              id: state.nextId,
+              start: lastEnd,
+              end: lastEnd + 10,
+              v0: 0,
+              v1: 0,
+              d0: lastSegment ? evaluateDistanceSegment(lastSegment, lastSegment.end) : 0,
+              d1: 0
+            }
+      );
+      state.nextId += 1;
+      syncCalculationRange(false);
+      refresh();
+    }
+
+    function applyPreset(kind) {
+      if (state.mode === "speed") {
+        if (kind === "uniform") {
+          state.segments = [
+            { id: 1, start: 0, end: 12, v0: 6, v1: 6, d0: 0, speed: 0 },
+            { id: 2, start: 12, end: 24, v0: 6, v1: 6, d0: 0, speed: 0 }
+          ];
+        } else if (kind === "journey") {
+          state.segments = [
+            { id: 1, start: 0, end: 8, v0: 0, v1: 16, d0: 0, speed: 0 },
+            { id: 2, start: 8, end: 14, v0: 16, v1: 16, d0: 0, speed: 0 },
+            { id: 3, start: 14, end: 18, v0: 16, v1: 0, d0: 0, speed: 0 }
+          ];
+        } else {
+          state.segments = [
+            { id: 1, start: 0, end: 10, v0: 0, v1: 15, d0: 0, speed: 0 },
+            { id: 2, start: 10, end: 20, v0: 15, v1: 25, d0: 0, speed: 0 },
+            { id: 3, start: 20, end: 30, v0: 25, v1: 10, d0: 0, speed: 0 }
+          ];
+        }
+      } else {
+        if (kind === "uniform") {
+          state.segments = [
+            { id: 1, start: 0, end: 10, v0: 0, d0: 0, d1: 50 },
+            { id: 2, start: 10, end: 20, v0: 0, d0: 50, d1: 100 }
+          ];
+        } else if (kind === "journey") {
+          state.segments = [
+            { id: 1, start: 0, end: 10, v0: 0, d0: 0, d1: 40 },
+            { id: 2, start: 10, end: 15, v0: 0, d0: 40, d1: 40 },
+            { id: 3, start: 15, end: 25, v0: 0, d0: 40, d1: 100 }
+          ];
+        } else {
+          state.segments = [
+            { id: 1, start: 0, end: 10, v0: 0, d0: 0, d1: 30 },
+            { id: 2, start: 10, end: 20, v0: 0, d0: 30, d1: 90 },
+            { id: 3, start: 20, end: 30, v0: 0, d0: 90, d1: 180 }
+          ];
+        }
+      }
+
+      state.nextId = state.segments.length + 1;
+      syncCalculationRange(true);
+      refresh();
+    }
+
+    elements.speedTab.addEventListener("click", () => setMode("speed"));
+    elements.distanceTab.addEventListener("click", () => setMode("distance"));
+    elements.addSegment.addEventListener("click", addSegment);
+    elements.resetGraph.addEventListener("click", () => setMode(state.mode));
+    elements.presetUniform.addEventListener("click", () => applyPreset("uniform"));
+    elements.presetJourney.addEventListener("click", () => applyPreset("journey"));
+    elements.presetAccel.addEventListener("click", () => applyPreset("accel"));
+    elements.calcFrom.addEventListener("input", refresh);
+    elements.calcTo.addEventListener("input", refresh);
+    window.addEventListener("resize", drawGraph);
+
+    refresh();
+  </script>
+</body>
+</html>
+

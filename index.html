@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>VCE Maths Hub</title>
+  <style>
+    :root {
+      --bg-1: #f7f3ea;
+      --bg-2: #e8efe9;
+      --panel: rgba(255, 255, 255, 0.78);
+      --ink: #1d2a30;
+      --muted: #617077;
+      --accent: #0b8b7c;
+      --accent-2: #e59712;
+      --line: rgba(29, 42, 48, 0.08);
+      --shadow: 0 22px 46px rgba(30, 40, 45, 0.12);
+      --radius: 26px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(229, 151, 18, 0.18), transparent 24%),
+        radial-gradient(circle at 88% 16%, rgba(11, 139, 124, 0.18), transparent 22%),
+        linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 28px));
+      margin: 18px auto 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero,
+    .panel,
+    .card {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero {
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(11, 139, 124, 0.14), transparent 68%);
+      pointer-events: none;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      line-height: 0.94;
+      max-width: 10ch;
+      margin-bottom: 14px;
+    }
+
+    .hero p,
+    .subtle,
+    .card p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), #17a695);
+      color: #fff;
+      box-shadow: 0 14px 28px rgba(11, 139, 124, 0.22);
+    }
+
+    .button.secondary {
+      background: rgba(255,255,255,0.9);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .button:active {
+      transform: scale(0.985);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+      align-content: center;
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(248,244,236,0.88));
+      border: 1px solid var(--line);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .panel {
+      padding: 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      background: rgba(11, 139, 124, 0.12);
+      color: var(--accent);
+    }
+
+    .tag.soon {
+      background: rgba(229, 151, 18, 0.14);
+      color: #9a6700;
+    }
+
+    .card h3 {
+      font-size: 1.28rem;
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .small-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .note-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+      padding-bottom: 6px;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 14px, 100%);
+        margin: 8px auto 18px;
+      }
+
+      .hero,
+      .panel,
+      .card {
+        border-radius: 20px;
+      }
+
+      .hero,
+      .panel {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Classroom Entry Page</div>
+        <h1>VCE Maths Hub</h1>
+        <p>
+          This is the home page for your classroom web activities. Open one activity at a time in class,
+          or add this page to your iPad home screen and use it as the single starting point for future topics.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="./compound-interest.html">Open Compound Interest</a>
+          <a class="button primary" href="./motion-graphs.html">Open Motion Graphs</a>
+          <a class="button secondary" href="https://github.com/GeeeG9/VCE-IG" target="_blank" rel="noreferrer">Open GitHub Repo</a>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="mini-card">
+          <strong>2 live activities</strong>
+          <span class="subtle">Compound interest and motion graphs are ready to use now.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Activities</h2>
+      <p class="subtle">Start with the current lesson page below. The other cards are placeholders for future classroom tools.</p>
+
+      <div class="cards">
+        <article class="card">
+          <span class="tag">Ready</span>
+          <h3>Compound Interest Explorer</h3>
+          <p>
+            Interactive classroom demo with investment and debt paths, time controls, monthly contributions,
+            and a classroom activity about long-run compounding gaps.
+          </p>
+          <div class="card-actions">
+            <a class="button primary" href="./compound-interest.html">Open Activity</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">Ready</span>
+          <h3>Motion Graphs</h3>
+          <p>
+            Interactive speed-time and distance-time graphs with segment editing, worked calculations,
+            average speed, total distance, and motion graph interpretation.
+          </p>
+          <div class="card-actions">
+            <a class="button primary" href="./motion-graphs.html">Open Activity</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag soon">Coming Soon</span>
+          <h3>Probability Lab</h3>
+          <p>
+            A future activity page for running quick experiments, repeating trials, and discussing long-run frequency.
+          </p>
+          <div class="card-actions">
+            <span class="small-link">Add later</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="footer">VCE Maths Hub for classroom activities</div>
+  </div>
+</body>
+</html>
