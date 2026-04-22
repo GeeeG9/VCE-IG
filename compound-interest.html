@@ -287,6 +287,7 @@
     }
 
     .stat {
+      min-width: 0;
       padding: 16px;
       border-radius: 20px;
       background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(249,242,232,0.86));
@@ -299,11 +300,13 @@
       margin-bottom: 8px;
     }
 
-    .stat-value {
-      font-size: clamp(1.2rem, 2.8vw, 2rem);
-      font-weight: 800;
-      line-height: 1.05;
-    }
+.stat-value {
+  font-size: clamp(1rem, 2.2vw, 2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 
     .graph-panel {
       display: grid;
