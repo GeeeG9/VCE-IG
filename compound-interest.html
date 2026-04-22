@@ -1032,12 +1032,18 @@
       ctx.arc(markerX, markerY, 7 * ratio, 0, Math.PI * 2);
       ctx.fillStyle = "#d95d39";
       ctx.fill();
-      ctx.fillStyle = "#1f2a2e";
+     const markerLabel = "Year " + markerYear.toFixed(1) + " | " + formatCurrency(markerValue);
 ctx.font = (12 * ratio) + 'px "Trebuchet MS", sans-serif';
+const labelWidth = ctx.measureText(markerLabel).width;
+
+ctx.fillStyle = "rgba(255, 251, 245, 0.92)";
+ctx.fillRect(markerX + 8 * ratio, markerY + 4 * ratio, labelWidth + 16 * ratio, 22 * ratio);
+
+ctx.fillStyle = "#1f2a2e";
 ctx.fillText(
-  "Year " + markerYear.toFixed(1) + " | " + formatCurrency(markerValue),
-  markerX + 12 * ratio,
-markerY + 22 * ratio
+  markerLabel,
+  markerX + 16 * ratio,
+  markerY + 20 * ratio
 );
 
       ctx.fillStyle = "#1f2a2e";
