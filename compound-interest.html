@@ -707,11 +707,14 @@
             </div>
           </div>
           
-          <div class="number-scale">
+<div class="number-scale">
   <span class="scale-chip">1 thousand = 10^3</span>
   <span class="scale-chip">1 million = 10^6</span>
   <span class="scale-chip">1 billion = 10^9</span>
   <span class="scale-chip">1 trillion = 10^12</span>
+  <span class="scale-chip">1 quadrillion = 10^15</span>
+  <span class="scale-chip">1 quintillion = 10^18</span>
+  <span class="scale-chip">1 sextillion = 10^21</span>
 </div>
 
           <div class="chart-wrap">
@@ -883,14 +886,23 @@
   const abs = Math.abs(value);
   const sign = value < 0 ? "-$" : "$";
 
+   if (abs >= 1e21) {
+    return sign + (abs / 1e21).toFixed(2) + " sextillion";
+  }
+  if (abs >= 1e18) {
+    return sign + (abs / 1e18).toFixed(2) + " quintillion";
+  }
+  if (abs >= 1e15) {
+    return sign + (abs / 1e15).toFixed(2) + " quadrillion";
+  }
   if (abs >= 1e12) {
-    return sign + (abs / 1e12).toPrecision(3) + " trillion";
+    return sign + (abs / 1e12).toFixed(2) + " trillion";
   }
   if (abs >= 1e9) {
-    return sign + (abs / 1e9).toPrecision(3) + " billion";
+    return sign + (abs / 1e9).toFixed(2) + " billion";
   }
   if (abs >= 1e6) {
-    return sign + (abs / 1e6).toPrecision(3) + " million";
+    return sign + (abs / 1e6).toFixed(2) + " million";
   }
   if (abs >= 1e3) {
     return sign + (abs / 1e3).toPrecision(3) + " thousand";
