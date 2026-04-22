@@ -1084,7 +1084,7 @@
       animationFrame = 0;
       elements.playButton.textContent = "Pause";
       playTimer = setInterval(() => {
-        animationFrame += 0.2;
+        animationFrame += 0.1;
         if (animationFrame >= state.years) {
           animationFrame = state.years;
           stopPlayback();
