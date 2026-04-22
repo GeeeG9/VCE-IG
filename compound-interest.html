@@ -1097,13 +1097,13 @@ ctx.fillText(
       animationFrame = 0;
       elements.playButton.textContent = "Pause";
       playTimer = setInterval(() => {
-        animationFrame += 0.05;
+        animationFrame += 0.02;
         if (animationFrame >= state.years) {
           animationFrame = state.years;
           stopPlayback();
         }
         drawChart();
-      }, 40);
+      }, 16);
     }
 
     elements.principal.addEventListener("input", (event) => setState({ principal: clampPrincipal(event.target.value) }));
