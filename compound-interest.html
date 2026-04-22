@@ -992,16 +992,21 @@
         ctx.fillText(formatCurrency(value), 8 * ratio, y + 4 * ratio);
       }
 
-      for (let year = 0; year <= state.years; year += 1) {
-        const x = padding.left + (year / state.years) * chartWidth;
-        ctx.beginPath();
-        ctx.moveTo(x, padding.top);
-        ctx.lineTo(x, padding.top + chartHeight);
-        ctx.strokeStyle = "rgba(31,42,46,0.05)";
-        ctx.stroke();
-        ctx.fillStyle = "rgba(95,109,113,0.92)";
-        ctx.fillText(String(year), x - 3 * ratio, height - 12 * ratio);
-      }
+     const xTickStep = state.years <= 20 ? 1 : state.years <= 40 ? 2 : 5;
+
+for (let year = 0; year <= state.years; year += 1) {
+  const x = padding.left + (year / state.years) * chartWidth;
+  ctx.beginPath();
+  ctx.moveTo(x, padding.top);
+  ctx.lineTo(x, padding.top + chartHeight);
+  ctx.strokeStyle = "rgba(31,42,46,0.05)";
+  ctx.stroke();
+
+  if (year % xTickStep === 0 || year === state.years) {
+    ctx.fillStyle = "rgba(95,109,113,0.92)";
+    ctx.fillText(String(year), x - 3 * ratio, height - 12 * ratio);
+  }
+}
 
       function drawLine(key, color) {
         ctx.beginPath();
