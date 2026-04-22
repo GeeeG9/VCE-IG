@@ -1032,6 +1032,13 @@
       ctx.arc(markerX, markerY, 7 * ratio, 0, Math.PI * 2);
       ctx.fillStyle = "#d95d39";
       ctx.fill();
+      ctx.fillStyle = "#1f2a2e";
+ctx.font = (12 * ratio) + 'px "Trebuchet MS", sans-serif';
+ctx.fillText(
+  "Year " + markerYear.toFixed(1) + " | " + formatCurrency(markerValue),
+  markerX + 12 * ratio,
+markerY + 22 * ratio
+);
 
       ctx.fillStyle = "#1f2a2e";
       ctx.font = (14 * ratio) + 'px "Trebuchet MS", sans-serif';
