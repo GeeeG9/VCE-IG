@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>G10 Maths Hub</title>
+  <title>VCE Maths Hub</title>
   <style>
     :root {
       --bg-1: #f7f3ea;
@@ -259,26 +259,21 @@
         <div class="eyebrow">Classroom Entry Page</div>
         <h1>G10 Maths Hub</h1>
         <p>
-          Welcom to G10 Math Hub, Start your exploration here!
+          Welcome to G10 Math Hub, Start your exploration here!
         </p>
-        <div class="hero-actions">
-          <a class="button primary" href="./compound-interest.html">Open Compound Interest</a>
-          <a class="button primary" href="./motion-graphs.html">Open Motion Graphs</a>
-          <a class="button secondary" href="https://github.com/GeeeG9/VCE-IG" target="_blank" rel="noreferrer">Open GitHub Repo</a>
-        </div>
       </div>
 
       <div class="hero-side">
         <div class="mini-card">
-          <strong>2 live activities</strong>
-          <span class="subtle">Compound interest and motion graphs are ready to use now.</span>
+          <strong id="lessonCount">3 Lessons Ready</strong>
+          <span class="subtle" id="lessonSummary">Your current lesson pages are ready to use now.</span>
         </div>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Activities</h2>
-      <p class="subtle">Start with the current lesson page below. The other cards are placeholders for future classroom tools.</p>
+      <h2>Lessons</h2>
+      <p class="subtle">Open one lesson page at a time from the cards below.</p>
 
       <div class="cards">
         <article class="card">
@@ -306,13 +301,24 @@
         </article>
 
         <article class="card">
-          <span class="tag soon">Coming Soon</span>
-          <h3>Probability Lab</h3>
+          <span class="tag">Ready</span>
+          <h3>Tangent</h3>
           <p>
-            A future activity page for running quick experiments, repeating trials, and discussing long-run frequency.
+            Interactive tangent page for exploring tangent lines, gradient ideas, and related graph concepts.
           </p>
           <div class="card-actions">
-            <span class="small-link">Add later</span>
+            <a class="button primary" href="./Tangent.html">Open Activity</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag soon">Coming Soon</span>
+          <h3>Future Lesson</h3>
+          <p>
+            More exciting maths explorations are coming soon.
+          </p>
+          <div class="card-actions">
+            <span class="small-link">Coming Soon</span>
           </div>
         </article>
       </div>
@@ -320,5 +326,18 @@
 
     <div class="footer">VCE Maths Hub for classroom activities</div>
   </div>
+  <script>
+    const lessonCards = Array.from(document.querySelectorAll(".cards .card"));
+    const lessonCount = document.getElementById("lessonCount");
+    const lessonSummary = document.getElementById("lessonSummary");
+
+    if (lessonCount) {
+      lessonCount.textContent = Math.max(lessonCards.length - 1, 0) + " Lessons Ready";
+    }
+
+    if (lessonSummary) {
+      lessonSummary.textContent = "Your current lesson pages are ready to use now.";
+    }
+  </script>
 </body>
 </html>
