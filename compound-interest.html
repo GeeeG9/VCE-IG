@@ -306,6 +306,11 @@
       gap: 18px;
     }
 
+    .secondary-grid {
+      display: grid;
+      gap: 18px;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -526,6 +531,35 @@
       font-size: 0.95rem;
     }
 
+    .mini-problem {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(13,139,124,0.08), rgba(255,255,255,0.82));
+      border: 1px solid rgba(13,139,124,0.14);
+    }
+
+    .mini-problem h3 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+
+    .mini-problem p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .mini-problem .answer {
+      margin-top: 10px;
+      color: var(--accent);
+      font-size: 0.95rem;
+      min-height: 0;
+    }
+
+    .mini-problem + .mini-problem {
+      margin-top: 12px;
+    }
+
     .prompt-box {
       padding: 18px;
       border-radius: 22px;
@@ -549,6 +583,56 @@
       font-size: 1rem;
       min-height: 28px;
       color: var(--accent-3);
+    }
+
+    .buffett-meta {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .buffett-control {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.76);
+      border: 1px solid rgba(31, 42, 46, 0.07);
+    }
+
+    .buffett-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.76);
+      border: 1px solid rgba(31, 42, 46, 0.07);
+    }
+
+    .buffett-row span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .buffett-row strong {
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .buffett-chart-wrap {
+      margin-top: 14px;
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(249,244,236,0.92));
+      border: 1px solid rgba(31, 42, 46, 0.08);
+    }
+
+    .buffett-caption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
 
     .preset-grid {
@@ -614,10 +698,12 @@
   <div class="shell">
     <section class="hero">
       <div>
+        <div class="eyebrow">COMPOUND INTEREST</div>
         <h1>Compound Interest Explorer</h1>
         <p>
-         A quote often attributed to Albert Einstein says:
-  “Compound interest is the eighth wonder of the world.”        </p>
+          A quote often attributed to Albert Einstein says:
+          "Compound interest is the eighth wonder of the world."
+        </p>
         <div class="hero-actions"><a class="button-link" href="./index.html">Return to Home</a></div>
         <div class="formula" id="formulaDisplay">A = A<sub>0</sub>(1 + r)<sup>n</sup></div>
       </div>
@@ -703,7 +789,6 @@
         </div>
       </aside>
 
-      <div class="right">
         <section class="panel graph-panel">
           <div>
             <h2>Growth View</h2>
@@ -755,54 +840,90 @@
 
           <div class="timeline" id="timeline"></div>
         </section>
+    </section>
 
+        <section class="secondary-grid">
         <section class="challenge">
           <div class="panel prompt-box">
-            <h3>Teacher Challenge</h3>
-            <p id="challengeText">
-              Can you make $1000 grow past $2000 in 10 years without using a rate above 8%? Try with and without monthly deposits.
+            <h3>Buffett Return Curve</h3>
+            <p>
+              Warren Buffett is an American investor who bought his first stock at age <strong>11</strong>,
+              putting in about <strong>$114.75</strong>. Over the long run, Berkshire Hathaway delivered a
+              compounded annual gain of about <strong>19.7% per year</strong>, and Forbes listed Buffett's
+              wealth at about <strong>$141.7 billion</strong> as of March 31, 2026.
             </p>
-            <div class="answer" id="challengeStatus">Try adjusting the controls.</div>
+            <div class="buffett-control">
+              <div class="control-top">
+                <label for="buffettYearsRange">Buffett years</label>
+                <div class="value-pill" id="buffettYearsPill">20 years</div>
+              </div>
+              <input id="buffettYearsRange" type="range" min="1" max="70" step="1" value="20">
+            </div>
+            <div class="buffett-meta">
+              <div class="buffett-row">
+                <span>Years invested</span>
+                <strong id="buffettYears">20 years</strong>
+              </div>
+              <div class="buffett-row">
+                <span>Projected value</span>
+                <strong id="buffettValue">$0</strong>
+              </div>
+              <div class="buffett-row">
+                <span>Starting amount</span>
+                <strong id="buffettStart">$114.75</strong>
+              </div>
+              <div class="buffett-row">
+                <span>Growth multiple</span>
+                <strong id="buffettMultiple">0x</strong>
+              </div>
+            </div>
+            <div class="buffett-chart-wrap">
+              <svg id="buffettChart" viewBox="0 0 320 150" width="100%" aria-label="Buffett return chart"></svg>
+            </div>
+            <div class="buffett-caption" id="buffettCaption">Long time horizons make the curve bend upward dramatically.</div>
           </div>
 
           <div class="panel">
-            <h2>Quick Presets</h2>
-            <p class="subtle">Tap a scenario to start a class discussion.</p>
-            <div class="preset-grid" id="presetGrid">
-              <button type="button" data-preset="saver">Patient Saver</button>
-              <button type="button" data-preset="fast">Fast Growth</button>
-              <button type="button" data-preset="long">Long Timeline</button>
-              <button type="button" data-preset="compare">Compare Frequency</button>
+            <h2>Australian Rate Snapshot</h2>
+            <p class="subtle">
+              Real-world reference for class discussion, based on publicly listed Australian rates available in April 2026. These are examples only, and actual rates vary by bank, balance, fees, conditions, loan type, and credit profile.
+            </p>
+            <div class="market-grid">
+              <div class="market-card">
+                <small>Cash saving accounts</small>
+                <strong>About 4.15% to 4.75% p.a.</strong>
+                <p>Typical bonus savings accounts at major banks were around the mid-4% range, often only if monthly conditions were met.</p>
+              </div>
+              <div class="market-card">
+                <small>Home loans</small>
+                <strong>About 5.84% to 6.24% p.a.</strong>
+                <p>Discounted owner-occupier variable home loan rates for new borrowing were commonly around the high-5% to low-6% range.</p>
+              </div>
+              <div class="market-card">
+                <small>Personal loans</small>
+                <strong>Often 7.25% to 22.25% p.a.</strong>
+                <p>Unsecured personal loans could be much higher, with representative rates around the mid-teens depending on the borrower.</p>
+              </div>
+            </div>
+            <div class="mini-problem">
+              <h3>Quick Compound Interest Problem</h3>
+              <p>
+                If <strong>$1000</strong> is invested at <strong>4.5% per year</strong> and compounds annually for
+                <strong>3 years</strong>, what is the final amount?
+              </p>
+              <div class="answer">Hint: use A = A<sub>0</sub>(1 + r)<sup>n</sup>.</div>
+            </div>
+            <div class="mini-problem">
+              <h3>Loan Question</h3>
+              <p>
+                A loan starts at <strong>$2500</strong> at <strong>6.0% per year</strong>, compounded annually, for
+                <strong>4 years</strong>. What amount is owed at the end?
+              </p>
+              <div class="answer">Hint: use one of the home loan rates from the cards above and identify A<sub>0</sub>, r, and n before substituting.</div>
             </div>
           </div>
         </section>
-         <section class="panel">
-          <h2>Australian Rate Snapshot</h2>
-          <p class="subtle">
-            Real-world reference for class discussion, based on publicly listed Australian rates available in April 2026. These are examples only, and actual rates vary by bank, balance, fees, conditions, loan type, and credit profile.
-          </p>
-          <div class="market-grid">
-            <div class="market-card">
-              <small>Cash saving accounts</small>
-              <strong>About 4.15% to 4.75% p.a.</strong>
-              <p>Typical bonus savings accounts at major banks were around the mid-4% range, often only if monthly conditions were met.</p>
-            </div>
-            <div class="market-card">
-              <small>Home loans</small>
-              <strong>About 5.84% to 6.24% p.a.</strong>
-              <p>Discounted owner-occupier variable home loan rates for new borrowing were commonly around the high-5% to low-6% range.</p>
-            </div>
-            <div class="market-card">
-              <small>Personal loans</small>
-              <strong>Often 7.25% to 22.25% p.a.</strong>
-              <p>Unsecured personal loans could be much higher, with representative rates around the mid-teens depending on the borrower.</p>
-            </div>
-          </div>
-          <p class="subtle" style="margin-top:14px;">
-          </p>
-        </section>
-      </div>
-    </section>
+      </section>
 
         <section class="activity-grid">
           <div class="panel">
@@ -868,7 +989,14 @@
       heroDoubling: document.getElementById("heroDoubling"),
       formulaDisplay: document.getElementById("formulaDisplay"),
       timeline: document.getElementById("timeline"),
-      challengeStatus: document.getElementById("challengeStatus"),
+      buffettYears: document.getElementById("buffettYears"),
+      buffettYearsPill: document.getElementById("buffettYearsPill"),
+      buffettYearsRange: document.getElementById("buffettYearsRange"),
+      buffettValue: document.getElementById("buffettValue"),
+      buffettStart: document.getElementById("buffettStart"),
+      buffettMultiple: document.getElementById("buffettMultiple"),
+      buffettCaption: document.getElementById("buffettCaption"),
+      buffettChart: document.getElementById("buffettChart"),
       mungerPositive: document.getElementById("mungerPositive"),
       mungerNegative: document.getElementById("mungerNegative"),
       mungerGap: document.getElementById("mungerGap"),
@@ -876,11 +1004,11 @@
       resetButton: document.getElementById("resetButton"),
       frequencyButtons: Array.from(document.querySelectorAll("#frequencyButtons button")),
       presetButtons: Array.from(document.querySelectorAll("#presetGrid button")),
-      challengeText: document.getElementById("challengeText"),
       canvas: document.getElementById("growthCanvas")
     };
 
     const ctx = elements.canvas.getContext("2d");
+    let buffettYearsSetting = 20;
     const frequencyLabels = {
       1: "Yearly",
       2: "Half-yearly",
@@ -907,6 +1035,10 @@
         currency: "AUD",
         maximumFractionDigits: value >= 1000 ? 0 : 2
       }).format(value);
+    }
+
+    function formatNumber(value) {
+      return Number(value).toFixed(2).replace(/\.00$/, "");
     }
     function formatCompactCurrency(value) {
   const abs = Math.abs(value);
@@ -1020,7 +1152,7 @@
       elements.mungerGap.textContent = formatCurrency(mungerGap);
 
       updateTimeline();
-      updateChallenge(final);
+      updateBuffettPanel();
     }
 
     function updateTimeline() {
@@ -1033,15 +1165,57 @@
       }).join("");
     }
 
-    function updateChallenge(final) {
-      const challengeMet = final >= 2000 && state.years === 10 && state.assetRate <= 8 && state.principal === 1000;
-      if (challengeMet) {
-        elements.challengeStatus.textContent = "Success: you reached the target within the limit.";
-        elements.challengeStatus.style.color = "var(--accent)";
-      } else {
-        elements.challengeStatus.textContent = "Current result: " + formatCurrency(final) + ". Can you hit the target?";
-        elements.challengeStatus.style.color = "var(--accent-3)";
+    function updateBuffettPanel() {
+      const assumedRate = 0.198;
+      const startAmount = 114.75;
+      const years = Math.max(1, buffettYearsSetting);
+      const projectedValue = startAmount * Math.pow(1 + assumedRate, years);
+      const multiple = projectedValue / startAmount;
+
+      elements.buffettYears.textContent = years + (years === 1 ? " year" : " years");
+      elements.buffettYearsPill.textContent = years + (years === 1 ? " year" : " years");
+      elements.buffettStart.textContent = formatCurrency(startAmount);
+      elements.buffettValue.textContent = formatCompactCurrency(projectedValue);
+      elements.buffettMultiple.textContent = multiple.toFixed(1) + "x";
+      elements.buffettCaption.textContent =
+        "Starting with about " + formatCurrency(startAmount) + ", " + formatNumber(years) + " years at 19.8% per year grows to about " + formatCompactCurrency(projectedValue) + ".";
+
+      const points = [];
+      for (let year = 0; year <= years; year += 1) {
+        points.push({
+          year,
+          value: startAmount * Math.pow(1 + assumedRate, year)
+        });
       }
+
+      const width = 320;
+      const height = 150;
+      const padding = { left: 28, right: 12, top: 12, bottom: 24 };
+      const chartWidth = width - padding.left - padding.right;
+      const chartHeight = height - padding.top - padding.bottom;
+      const maxValue = Math.max(...points.map((point) => point.value));
+
+      const path = points.map((point, index) => {
+        const x = padding.left + (point.year / years) * chartWidth;
+        const y = padding.top + chartHeight - (point.value / maxValue) * chartHeight;
+        return (index === 0 ? "M " : "L ") + x.toFixed(2) + " " + y.toFixed(2);
+      }).join(" ");
+
+      const area = path + " L " + (padding.left + chartWidth) + " " + (padding.top + chartHeight) + " L " + padding.left + " " + (padding.top + chartHeight) + " Z";
+      const lastX = padding.left + chartWidth;
+      const lastY = padding.top + chartHeight - (projectedValue / maxValue) * chartHeight;
+
+      elements.buffettChart.innerHTML = `
+        <rect x="0" y="0" width="${width}" height="${height}" rx="14" fill="transparent"></rect>
+        <line x1="${padding.left}" y1="${padding.top + chartHeight}" x2="${width - padding.right}" y2="${padding.top + chartHeight}" stroke="rgba(31,42,46,0.10)" />
+        <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${padding.top + chartHeight}" stroke="rgba(31,42,46,0.10)" />
+        <path d="${area}" fill="rgba(17,122,139,0.12)"></path>
+        <path d="${path}" fill="none" stroke="#117a8b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+        <circle cx="${lastX}" cy="${lastY}" r="5" fill="#e69a12"></circle>
+        <text x="${padding.left}" y="${height - 6}" fill="rgba(97,112,117,0.95)" font-size="11">0</text>
+        <text x="${width - padding.right - 10}" y="${height - 6}" fill="rgba(97,112,117,0.95)" font-size="11">${years}y</text>
+        <text x="${padding.left - 2}" y="${padding.top + 10}" fill="rgba(97,112,117,0.95)" font-size="11">${formatCompactCurrency(maxValue)}</text>
+      `;
     }
 
     function drawChart() {
@@ -1243,6 +1417,11 @@ ctx.fillText(
         animationFrame = 0;
         setState({ ...presets[button.dataset.preset] });
       });
+    });
+
+    elements.buffettYearsRange.addEventListener("input", (event) => {
+      buffettYearsSetting = Number(event.target.value);
+      updateBuffettPanel();
     });
 
     window.addEventListener("resize", drawChart);
