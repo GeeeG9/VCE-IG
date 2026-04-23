@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>IG G10 Trigonometry Lab</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --panel: rgba(255, 251, 245, 0.88);
+      --ink: #1f2a2e;
+      --muted: #5f6d71;
+      --accent: #0d8b7c;
+      --accent-2: #f29f05;
+      --accent-3: #d95d39;
+      --line: rgba(31, 42, 46, 0.12);
+      --shadow: 0 22px 44px rgba(45, 52, 54, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(242, 159, 5, 0.2), transparent 26%),
+        radial-gradient(circle at 84% 18%, rgba(13, 139, 124, 0.18), transparent 24%),
+        linear-gradient(160deg, #f8f6ef 0%, #efe5d2 100%);
+    }
+
+    .shell {
+      width: min(1240px, calc(100% - 28px));
+      margin: 18px auto 28px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero,
+    .panel,
+    .stat,
+    .mini-card {
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -40px -40px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(13, 139, 124, 0.18), transparent 66%);
+      pointer-events: none;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    .eyebrow {
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4.8vw, 3.9rem);
+      line-height: 0.95;
+      max-width: 11ch;
+      margin-bottom: 14px;
+    }
+
+    .hero p,
+    .subtle,
+    .card-text {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .hero-actions {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button-link,
+    .mode-bar button,
+    .scenario-grid button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      font: inherit;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+    }
+
+    .button-link.primary,
+    .mode-bar button.active,
+    .scenario-grid button.active {
+      background: linear-gradient(135deg, var(--accent), #18a796);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(13, 139, 124, 0.24);
+    }
+
+    button:active,
+    .button-link:active {
+      transform: scale(0.985);
+    }
+
+    .formula-box {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(13, 139, 124, 0.08);
+      border: 1px solid rgba(13, 139, 124, 0.12);
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      line-height: 1.05;
+      margin: 0 0.12em;
+    }
+
+    .frac .top {
+      display: block;
+      padding: 0 0.22em 0.08em;
+      border-bottom: 1.6px solid currentColor;
+    }
+
+    .frac .bottom {
+      display: block;
+      padding: 0.08em 0.22em 0;
+    }
+
+    .inline-formula {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.12em;
+      white-space: nowrap;
+    }
+
+    .hero-cards {
+      display: grid;
+      gap: 12px;
+      align-content: center;
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.94), rgba(250,244,236,0.9));
+      border: 1px solid rgba(31, 42, 46, 0.08);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h2 {
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .mode-bar {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .mode-bar button {
+      border-radius: 16px;
+      min-height: 56px;
+      justify-content: flex-start;
+      text-align: left;
+      padding: 0 16px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .control {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(31, 42, 46, 0.08);
+    }
+
+    .is-hidden {
+      display: none;
+    }
+
+    .control-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .control label {
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+
+    .value-pill {
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(13, 139, 124, 0.12);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      min-width: 84px;
+      text-align: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      height: 38px;
+      touch-action: pan-y;
+    }
+
+    .right-col {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(249,242,232,0.86));
+      border: 1px solid rgba(31, 42, 46, 0.08);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: clamp(1rem, 2vw, 1.9rem);
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .visual-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+
+    .canvas-wrap {
+      border-radius: 24px;
+      padding: 14px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.84), rgba(249,245,238,0.92)),
+        repeating-linear-gradient(
+          90deg,
+          transparent 0,
+          transparent 71px,
+          rgba(31, 42, 46, 0.03) 71px,
+          rgba(31, 42, 46, 0.03) 72px
+        );
+      border: 1px solid rgba(31, 42, 46, 0.08);
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.72), rgba(245,239,229,0.88));
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(31, 42, 46, 0.08);
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .step strong,
+    .focus {
+      color: var(--ink);
+    }
+
+    .step code {
+      font-family: inherit;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(13, 139, 124, 0.08);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .scenario-grid button {
+      min-height: 54px;
+      border-radius: 16px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .lower-grid {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .practice-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .practice-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .practice-grid.triple {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .practice-grid.double {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .practice-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(31, 42, 46, 0.08);
+      display: grid;
+      gap: 10px;
+    }
+
+    .practice-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .practice-card p {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.95rem;
+    }
+
+    .practice-diagram {
+      width: 100%;
+      max-width: 170px;
+      height: auto;
+      display: block;
+    }
+
+    .note-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .note {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(31, 42, 46, 0.08);
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+      padding-bottom: 6px;
+    }
+
+    @media (max-width: 1040px) {
+      .hero,
+      .layout,
+      .lower-grid,
+      .visual-grid,
+      .info-grid,
+      .practice-grid.triple,
+      .practice-grid.double {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .shell {
+        width: min(100% - 14px, 100%);
+        margin: 8px auto 18px;
+      }
+
+      .hero,
+      .panel,
+      .mini-card,
+      .stat {
+        border-radius: 20px;
+      }
+
+      .hero,
+      .panel {
+        padding: 16px;
+      }
+
+      .stats,
+      .scenario-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">TRIGONOMETRY</div>
+        <h1>Trigonometry with Tangent</h1>
+        <p>
+          Explore how tangent connects angle and side length in right-angled triangles. This page covers finding a side,
+          finding an angle, and applying angle of elevation and angle of depression in simple classroom contexts.
+        </p>
+        <div class="hero-actions">
+          <a class="button-link" href="./index.html">Return to Home</a>
+        </div>
+        <div class="formula-box" id="formulaDisplay">tan &theta; = <span class="frac"><span class="top">opposite</span><span class="bottom">adjacent</span></span></div>
+      </div>
+
+      <div class="hero-cards">
+        <div class="mini-card">
+          <strong>tan &theta; = <span class="frac"><span class="top">opposite</span><span class="bottom">adjacent</span></span></strong>
+          <span class="subtle">Tangent formula for finding a missing side.</span>
+        </div>
+        <div class="mini-card">
+          <strong>&theta; = tan<sup>-1</sup>(<span class="frac"><span class="top">opposite</span><span class="bottom">adjacent</span></span>)</strong>
+          <span class="subtle">Inverse tangent formula for finding an angle.</span>
+        </div>
+        <div class="mini-card">
+          <strong id="heroContext">Elevation</strong>
+          <span class="subtle">Right triangles appear in ramps, ladders, trees, buildings, and line of sight problems.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout" id="lab">
+      <aside class="panel">
+        <h2>Choose Mode</h2>
+        <p class="subtle">Use the same tangent idea in five different ways.</p>
+
+        <div class="mode-bar">
+          <button type="button" class="active" data-mode="side">Find opposite side from angle and adjacent</button>
+          <button type="button" data-mode="adjacent">Find adjacent side from angle and opposite</button>
+          <button type="button" data-mode="angle">Find angle from opposite and adjacent</button>
+          <button type="button" data-mode="elevation">Angle of elevation</button>
+          <button type="button" data-mode="depression">Angle of depression</button>
+        </div>
+
+        <div class="controls">
+          <div class="control" id="angleControl">
+            <div class="control-top">
+              <label for="angleRange" id="angleLabel">Angle</label>
+              <div class="value-pill" id="angleValue">40&deg;</div>
+            </div>
+            <input id="angleRange" type="range" min="10" max="80" step="1" value="40">
+          </div>
+
+          <div class="control" id="adjacentControl">
+            <div class="control-top">
+              <label for="adjacentRange" id="adjacentLabel">Adjacent side</label>
+              <div class="value-pill" id="adjacentValue">10.0</div>
+            </div>
+            <input id="adjacentRange" type="range" min="2" max="30" step="0.5" value="10">
+          </div>
+
+          <div class="control" id="oppositeControl">
+            <div class="control-top">
+              <label for="oppositeRange" id="oppositeLabel">Opposite side</label>
+              <div class="value-pill" id="oppositeValue">8.4</div>
+            </div>
+            <input id="oppositeRange" type="range" min="2" max="30" step="0.5" value="8.5">
+          </div>
+        </div>
+      </aside>
+
+      <div class="right-col">
+        <section class="panel">
+          <h2>Live Triangle</h2>
+          <p class="subtle" id="panelDescription">Use tangent to connect the opposite side, adjacent side, and the marked angle.</p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-label">Mode</div>
+              <div class="stat-value" id="statMode">Find side</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Tangent value</div>
+              <div class="stat-value" id="statTan">0.839</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Answer</div>
+              <div class="stat-value" id="statAnswer">8.39</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Context</div>
+              <div class="stat-value" id="statContext">Right triangle</div>
+            </div>
+          </div>
+
+          <div class="visual-grid" style="margin-top:16px;">
+            <div class="canvas-wrap">
+              <canvas id="triangleCanvas" width="900" height="520" aria-label="Right triangle diagram"></canvas>
+            </div>
+
+            <div class="steps">
+              <div class="step"><strong>Rule:</strong> <span id="ruleLine">tan &theta; = <span class="frac"><span class="top">opposite</span><span class="bottom">adjacent</span></span></span></div>
+              <div class="step"><strong>Substitute:</strong> <span id="substituteLine">tan 40&deg; = <span class="frac"><span class="top">opposite</span><span class="bottom">10</span></span></span></div>
+              <div class="step"><strong>Rearrange:</strong> <span id="rearrangeLine">opposite = 10 tan 40&deg;</span></div>
+              <div class="step"><strong>Answer:</strong> <span class="focus" id="answerLine">opposite = 8.39 units</span></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <div class="lower-left">
+        <aside class="panel">
+          <h2>Core Triangle Skills</h2>
+          <p class="subtle">Practise the three direct tangent skills first.</p>
+          <div class="practice-grid triple" style="margin-top:14px;">
+            <div class="practice-card">
+              <strong>1. Find Opposite Side</strong>
+              <svg class="practice-diagram" viewBox="0 0 180 110" aria-hidden="true">
+                <path d="M20 88 L118 88 L118 26 Z" fill="rgba(13,139,124,0.08)" stroke="#0d8b7c" stroke-width="3" />
+                <path d="M109 88 L109 79 L118 79" fill="none" stroke="#f29f05" stroke-width="3" />
+                <path d="M20 88 A18 18 0 0 1 34 76" fill="none" stroke="#d95d39" stroke-width="3" />
+                <text x="30" y="76" font-size="13" fill="#d95d39">32°</text>
+                <text x="58" y="101" font-size="13" fill="#1f2a2e">14 m</text>
+                <text x="124" y="60" font-size="13" fill="#1f2a2e">?</text>
+              </svg>
+              <p>Angle = <strong>32&deg;</strong>, adjacent = <strong>14 m</strong>. Find the opposite side.</p>
+            </div>
+            <div class="practice-card">
+              <strong>2. Find Adjacent Side</strong>
+              <svg class="practice-diagram" viewBox="0 0 180 110" aria-hidden="true">
+                <path d="M24 88 L120 88 L120 34 Z" fill="rgba(13,139,124,0.08)" stroke="#0d8b7c" stroke-width="3" />
+                <path d="M111 88 L111 79 L120 79" fill="none" stroke="#f29f05" stroke-width="3" />
+                <path d="M24 88 A18 18 0 0 1 40 72" fill="none" stroke="#d95d39" stroke-width="3" />
+                <text x="34" y="76" font-size="13" fill="#d95d39">41°</text>
+                <text x="126" y="64" font-size="13" fill="#1f2a2e">9 m</text>
+                <text x="62" y="101" font-size="13" fill="#1f2a2e">?</text>
+              </svg>
+              <p>Angle = <strong>41&deg;</strong>, opposite = <strong>9 m</strong>. Find the adjacent side.</p>
+            </div>
+            <div class="practice-card">
+              <strong>3. Find Angle</strong>
+              <svg class="practice-diagram" viewBox="0 0 180 110" aria-hidden="true">
+                <path d="M18 88 L122 88 L122 42 Z" fill="rgba(13,139,124,0.08)" stroke="#0d8b7c" stroke-width="3" />
+                <path d="M113 88 L113 79 L122 79" fill="none" stroke="#f29f05" stroke-width="3" />
+                <path d="M18 88 A18 18 0 0 1 34 74" fill="none" stroke="#d95d39" stroke-width="3" />
+                <text x="26" y="76" font-size="13" fill="#d95d39">?</text>
+                <text x="126" y="67" font-size="13" fill="#1f2a2e">11 m</text>
+                <text x="60" y="101" font-size="13" fill="#1f2a2e">15 m</text>
+              </svg>
+              <p>Opposite = <strong>11 m</strong>, adjacent = <strong>15 m</strong>. Find the angle.</p>
+            </div>
+          </div>
+        </aside>
+
+        <aside class="panel">
+          <h2>Applications</h2>
+          <p class="subtle">Then try elevation and depression in context.</p>
+          <div class="practice-grid double" style="margin-top:14px;">
+            <div class="practice-card">
+              <strong>4. Angle of Elevation</strong>
+              <svg class="practice-diagram" viewBox="0 0 180 110" aria-hidden="true">
+                <line x1="18" y1="90" x2="162" y2="90" stroke="rgba(31,42,46,0.18)" stroke-width="3" />
+                <path d="M38 90 L120 90 L120 34 Z" fill="rgba(13,139,124,0.08)" stroke="#0d8b7c" stroke-width="3" />
+                <path d="M111 90 L111 81 L120 81" fill="none" stroke="#f29f05" stroke-width="3" />
+                <path d="M38 90 A18 18 0 0 1 53 75" fill="none" stroke="#d95d39" stroke-width="3" />
+                <text x="49" y="77" font-size="13" fill="#d95d39">28°</text>
+                <text x="62" y="101" font-size="13" fill="#1f2a2e">24 m</text>
+                <text x="126" y="60" font-size="13" fill="#1f2a2e">?</text>
+              </svg>
+              <p>A student stands <strong>24 m</strong> from a building and measures an <strong>angle of elevation of 28&deg;</strong> to the top. Find the building height.</p>
+            </div>
+            <div class="practice-card">
+              <strong>5. Angle of Depression</strong>
+              <svg class="practice-diagram" viewBox="0 0 180 110" aria-hidden="true">
+                <line x1="70" y1="28" x2="156" y2="28" stroke="#d95d39" stroke-width="3" />
+                <line x1="18" y1="90" x2="162" y2="90" stroke="rgba(31,42,46,0.18)" stroke-width="3" />
+                <path d="M42 90 L114 90 L114 28 Z" fill="rgba(13,139,124,0.08)" stroke="#0d8b7c" stroke-width="3" />
+                <path d="M105 90 L105 81 L114 81" fill="none" stroke="#f29f05" stroke-width="3" />
+                <path d="M114 28 A18 18 0 0 0 96 42" fill="none" stroke="#d95d39" stroke-width="3" />
+                <text x="91" y="44" font-size="13" fill="#d95d39">36°</text>
+                <text x="62" y="101" font-size="13" fill="#1f2a2e">18 m</text>
+                <text x="121" y="61" font-size="13" fill="#1f2a2e">?</text>
+              </svg>
+              <p>From a lookout platform, the <strong>angle of depression is 36&deg;</strong> to a boat that is <strong>18 m</strong> horizontally away. Find the vertical drop to the boat.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="info-grid">
+        <div class="panel">
+          <h2>Course Content</h2>
+          <div class="note-list">
+            <div class="note">Use <strong>tangent</strong> in a right-angled triangle: <span class="inline-formula">tan &theta; = <span class="frac"><span class="top">opposite</span><span class="bottom">adjacent</span></span></span>.</div>
+            <div class="note">Find the <strong>length of a side</strong> when an angle and another side are known.</div>
+            <div class="note">Find the <strong>size of an angle</strong> using the given lengths of two sides.</div>
+            <div class="note">Interpret and solve <strong>angle of elevation</strong> and <strong>angle of depression</strong> questions.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Teacher Reminders</h2>
+          <div class="note-list">
+            <div class="note">The right angle is always the 90&deg; corner. Mark it first before naming opposite and adjacent.</div>
+            <div class="note">Opposite and adjacent depend on the chosen angle. They can change when the reference angle changes.</div>
+            <div class="note">To find an angle from sides, use the inverse tangent: <span class="inline-formula">&theta; = tan<sup>-1</sup>(<span class="frac"><span class="top">opposite</span><span class="bottom">adjacent</span></span>)</span>.</div>
+            <div class="note">Angle of elevation looks <strong>up</strong>. Angle of depression looks <strong>down</strong>.</div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <div class="footer-note">Tip: this page matches the same classroom visual style as your earlier activity pages and works well on iPad touch screens.</div>
+  </div>
+
+  <script>
+    const elements = {
+      modeButtons: Array.from(document.querySelectorAll("[data-mode]")),
+      scenarioButtons: Array.from(document.querySelectorAll("[data-scenario]")),
+      angleControl: document.getElementById("angleControl"),
+      angleRange: document.getElementById("angleRange"),
+      adjacentRange: document.getElementById("adjacentRange"),
+      oppositeRange: document.getElementById("oppositeRange"),
+      adjacentControl: document.getElementById("adjacentControl"),
+      oppositeControl: document.getElementById("oppositeControl"),
+      angleValue: document.getElementById("angleValue"),
+      adjacentValue: document.getElementById("adjacentValue"),
+      oppositeValue: document.getElementById("oppositeValue"),
+      angleLabel: document.getElementById("angleLabel"),
+      adjacentLabel: document.getElementById("adjacentLabel"),
+      oppositeLabel: document.getElementById("oppositeLabel"),
+      formulaDisplay: document.getElementById("formulaDisplay"),
+      panelDescription: document.getElementById("panelDescription"),
+      statMode: document.getElementById("statMode"),
+      statTan: document.getElementById("statTan"),
+      statAnswer: document.getElementById("statAnswer"),
+      statContext: document.getElementById("statContext"),
+      ruleLine: document.getElementById("ruleLine"),
+      substituteLine: document.getElementById("substituteLine"),
+      rearrangeLine: document.getElementById("rearrangeLine"),
+      answerLine: document.getElementById("answerLine"),
+      heroContext: document.getElementById("heroContext"),
+      canvas: document.getElementById("triangleCanvas")
+    };
+
+    const ctx = elements.canvas.getContext("2d");
+
+    const scenarios = {
+      side: { mode: "side", angle: 40, adjacent: 10, opposite: 8.5 },
+      adjacent: { mode: "adjacent", angle: 35, adjacent: 10, opposite: 7 },
+      angle: { mode: "angle", angle: 37, adjacent: 12, opposite: 9 },
+      elevation: { mode: "elevation", angle: 35, adjacent: 18, opposite: 12.5 },
+      depression: { mode: "depression", angle: 28, adjacent: 20, opposite: 10.6 }
+    };
+
+    let state = { ...scenarios.side };
+
+    function formatNumber(value) {
+      return Number(value).toFixed(2).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
+    }
+
+    function degToRad(value) {
+      return value * Math.PI / 180;
+    }
+
+    function radToDeg(value) {
+      return value * 180 / Math.PI;
+    }
+
+    function frac(top, bottom) {
+      return '<span class="frac"><span class="top">' + top + '</span><span class="bottom">' + bottom + '</span></span>';
+    }
+
+    function getComputedValues() {
+      const angle = Number(state.angle);
+      const adjacent = Number(state.adjacent);
+      const opposite = Number(state.opposite);
+      const tanValue = Math.tan(degToRad(angle));
+
+      if (state.mode === "side") {
+        const result = adjacent * tanValue;
+        return {
+          angle,
+          adjacent,
+          opposite: result,
+          answer: result,
+          tanValue,
+          context: "Find side"
+        };
+      }
+
+      if (state.mode === "adjacent") {
+        const result = opposite / Math.max(tanValue, 0.0001);
+        return {
+          angle,
+          adjacent: result,
+          opposite,
+          answer: result,
+          tanValue,
+          context: "Find adjacent"
+        };
+      }
+
+      if (state.mode === "angle") {
+        const ratio = opposite / adjacent;
+        const result = radToDeg(Math.atan(ratio));
+        return {
+          angle: result,
+          adjacent,
+          opposite,
+          answer: result,
+          tanValue: ratio,
+          context: "Find angle"
+        };
+      }
+
+      const result = adjacent * tanValue;
+      return {
+        angle,
+        adjacent,
+        opposite: result,
+        answer: result,
+        tanValue,
+        context: state.mode === "depression" ? "Depression" : "Elevation"
+      };
+    }
+
+    function syncControls(values) {
+      elements.modeButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.mode === state.mode);
+      });
+
+      elements.scenarioButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.scenario === activeScenario());
+      });
+
+      elements.angleRange.value = state.angle;
+      elements.adjacentRange.value = values.adjacent;
+      elements.oppositeRange.value = state.opposite;
+
+      elements.angleValue.innerHTML = formatNumber(values.angle) + "&deg;";
+      elements.adjacentValue.textContent = formatNumber(values.adjacent);
+      elements.oppositeValue.textContent = formatNumber(values.opposite);
+
+      if (state.mode === "side") {
+        elements.angleControl.classList.remove("is-hidden");
+        elements.adjacentControl.classList.remove("is-hidden");
+        elements.oppositeControl.classList.add("is-hidden");
+        elements.angleLabel.textContent = "Angle";
+        elements.adjacentLabel.textContent = "Adjacent side";
+        elements.oppositeLabel.textContent = "Opposite guide";
+      } else if (state.mode === "adjacent") {
+        elements.angleControl.classList.remove("is-hidden");
+        elements.adjacentControl.classList.add("is-hidden");
+        elements.oppositeControl.classList.remove("is-hidden");
+        elements.angleLabel.textContent = "Angle";
+        elements.adjacentLabel.textContent = "Adjacent side";
+        elements.oppositeLabel.textContent = "Opposite side";
+      } else if (state.mode === "angle") {
+        elements.angleControl.classList.add("is-hidden");
+        elements.adjacentControl.classList.remove("is-hidden");
+        elements.oppositeControl.classList.remove("is-hidden");
+        elements.angleLabel.textContent = "Angle guide";
+        elements.adjacentLabel.textContent = "Adjacent side";
+        elements.oppositeLabel.textContent = "Opposite side";
+      } else if (state.mode === "elevation") {
+        elements.angleControl.classList.remove("is-hidden");
+        elements.adjacentControl.classList.remove("is-hidden");
+        elements.oppositeControl.classList.add("is-hidden");
+        elements.angleLabel.textContent = "Angle of elevation";
+        elements.adjacentLabel.textContent = "Horizontal distance";
+        elements.oppositeLabel.textContent = "Height guide";
+      } else {
+        elements.angleControl.classList.remove("is-hidden");
+        elements.adjacentControl.classList.remove("is-hidden");
+        elements.oppositeControl.classList.add("is-hidden");
+        elements.angleLabel.textContent = "Angle of depression";
+        elements.adjacentLabel.textContent = "Horizontal distance";
+        elements.oppositeLabel.textContent = "Vertical drop guide";
+      }
+    }
+
+    function updateText(values) {
+      if (state.mode === "side") {
+        elements.formulaDisplay.innerHTML = "tan &theta; = " + frac("opposite", "adjacent");
+        elements.panelDescription.textContent = "Use tangent when you know an angle and the adjacent side, and want the opposite side.";
+        elements.statMode.textContent = "Find side";
+        elements.statTan.textContent = formatNumber(values.tanValue);
+        elements.statAnswer.textContent = formatNumber(values.answer) + " units";
+        elements.statContext.textContent = "Right triangle";
+        elements.ruleLine.innerHTML = "tan &theta; = " + frac("opposite", "adjacent");
+        elements.substituteLine.innerHTML = "tan " + formatNumber(state.angle) + "&deg; = " + frac("opposite", formatNumber(state.adjacent));
+        elements.rearrangeLine.innerHTML = "opposite = " + formatNumber(state.adjacent) + " tan " + formatNumber(state.angle) + "&deg;";
+        elements.answerLine.textContent = "opposite = " + formatNumber(values.answer) + " units";
+        elements.heroContext.textContent = "Tangent side problem";
+      } else if (state.mode === "adjacent") {
+        elements.formulaDisplay.innerHTML = "adjacent = " + frac("opposite", "tan &theta;");
+        elements.panelDescription.textContent = "Use tangent when you know an angle and the opposite side, and want the adjacent side.";
+        elements.statMode.textContent = "Find adjacent";
+        elements.statTan.textContent = formatNumber(values.tanValue);
+        elements.statAnswer.textContent = formatNumber(values.answer) + " units";
+        elements.statContext.textContent = "Right triangle";
+        elements.ruleLine.innerHTML = "tan &theta; = " + frac("opposite", "adjacent");
+        elements.substituteLine.innerHTML = "tan " + formatNumber(state.angle) + "&deg; = " + frac(formatNumber(state.opposite), "adjacent");
+        elements.rearrangeLine.innerHTML = "adjacent = " + frac(formatNumber(state.opposite), "tan " + formatNumber(state.angle) + "&deg;");
+        elements.answerLine.textContent = "adjacent = " + formatNumber(values.answer) + " units";
+        elements.heroContext.textContent = "Adjacent side problem";
+      } else if (state.mode === "angle") {
+        elements.formulaDisplay.innerHTML = "&theta; = tan<sup>-1</sup>(" + frac("opposite", "adjacent") + ")";
+        elements.panelDescription.textContent = "Use inverse tangent when two side lengths are known and the angle is required.";
+        elements.statMode.textContent = "Find angle";
+        elements.statTan.textContent = formatNumber(values.tanValue);
+        elements.statAnswer.innerHTML = formatNumber(values.answer) + "&deg;";
+        elements.statContext.textContent = "Inverse tangent";
+        elements.ruleLine.innerHTML = "tan &theta; = " + frac("opposite", "adjacent");
+        elements.substituteLine.innerHTML = "tan &theta; = " + frac(formatNumber(state.opposite), formatNumber(state.adjacent));
+        elements.rearrangeLine.innerHTML = "&theta; = tan<sup>-1</sup>(" + frac(formatNumber(state.opposite), formatNumber(state.adjacent)) + ")";
+        elements.answerLine.innerHTML = "&theta; = " + formatNumber(values.answer) + "&deg;";
+        elements.heroContext.textContent = "Known sides problem";
+      } else if (state.mode === "elevation") {
+        elements.formulaDisplay.innerHTML = "height = " + formatNumber(state.adjacent) + " tan " + formatNumber(state.angle) + "&deg;";
+        elements.panelDescription.textContent = "Angle of elevation is measured upward from a horizontal line. The same triangle can also represent angle of depression.";
+        elements.statMode.textContent = "Elevation";
+        elements.statTan.textContent = formatNumber(values.tanValue);
+        elements.statAnswer.textContent = formatNumber(values.answer) + " m";
+        elements.statContext.textContent = "Tree or building";
+        elements.ruleLine.innerHTML = "tan &theta; = " + frac("height", "horizontal distance");
+        elements.substituteLine.innerHTML = "tan " + formatNumber(state.angle) + "&deg; = " + frac("height", formatNumber(state.adjacent));
+        elements.rearrangeLine.innerHTML = "height = " + formatNumber(state.adjacent) + " tan " + formatNumber(state.angle) + "&deg;";
+        elements.answerLine.textContent = "height = " + formatNumber(values.answer) + " m";
+        elements.heroContext.textContent = "Real-world triangle";
+      } else {
+        elements.formulaDisplay.innerHTML = "drop = " + formatNumber(state.adjacent) + " tan " + formatNumber(state.angle) + "&deg;";
+        elements.panelDescription.textContent = "Angle of depression is measured downward from a horizontal line. It uses the same tangent relationship as elevation.";
+        elements.statMode.textContent = "Depression";
+        elements.statTan.textContent = formatNumber(values.tanValue);
+        elements.statAnswer.textContent = formatNumber(values.answer) + " m";
+        elements.statContext.textContent = "Line of sight";
+        elements.ruleLine.innerHTML = "tan &theta; = " + frac("drop", "horizontal distance");
+        elements.substituteLine.innerHTML = "tan " + formatNumber(state.angle) + "&deg; = " + frac("drop", formatNumber(state.adjacent));
+        elements.rearrangeLine.innerHTML = "drop = " + formatNumber(state.adjacent) + " tan " + formatNumber(state.angle) + "&deg;";
+        elements.answerLine.textContent = "drop = " + formatNumber(values.answer) + " m";
+        elements.heroContext.textContent = "Real-world triangle";
+      }
+    }
+
+    function activeScenario() {
+      if (state.mode === "side") {
+        return "side";
+      }
+      if (state.mode === "adjacent") {
+        return "adjacent";
+      }
+      if (state.mode === "angle") {
+        return "angle";
+      }
+      if (state.mode === "elevation") {
+        return "elevation";
+      }
+      return "depression";
+    }
+
+    function drawTriangle(values) {
+      const rect = elements.canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      const width = Math.floor(rect.width * ratio);
+      const height = Math.floor((rect.width * 0.56) * ratio);
+      elements.canvas.width = width;
+      elements.canvas.height = height;
+
+      const pad = 52 * ratio;
+      const baseX = 120 * ratio;
+      const baseY = height - 90 * ratio;
+      const maxBase = width - 260 * ratio;
+      const maxHeight = height - 190 * ratio;
+      const demoAdjacent = 12;
+      const demoOpposite = Math.max(Math.tan(degToRad(values.angle)) * demoAdjacent, 1);
+      const scale = Math.min(maxBase / Math.max(demoAdjacent, 1), maxHeight / Math.max(demoOpposite, 1));
+      const run = demoAdjacent * scale;
+      const rise = demoOpposite * scale;
+
+      const x1 = baseX;
+      const y1 = baseY;
+      const x2 = baseX + run;
+      const y2 = baseY;
+      const x3 = baseX + run;
+      const y3 = baseY - rise;
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.lineWidth = 3 * ratio;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.font = (16 * ratio) + 'px "Trebuchet MS", sans-serif';
+
+      if (state.mode === "elevation" || state.mode === "depression") {
+        ctx.strokeStyle = "rgba(31,42,46,0.14)";
+        ctx.beginPath();
+        ctx.moveTo(70 * ratio, y1);
+        ctx.lineTo(width - 70 * ratio, y1);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "rgba(13, 139, 124, 0.08)";
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineTo(x3, y3);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = "#0d8b7c";
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineTo(x3, y3);
+      ctx.stroke();
+
+      if (state.mode === "elevation") {
+        ctx.save();
+        ctx.setLineDash([8 * ratio, 6 * ratio]);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x3, y3);
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x3, y3);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = "#f29f05";
+      ctx.beginPath();
+      ctx.moveTo(x2 - 9 * ratio, y2);
+      ctx.lineTo(x2 - 9 * ratio, y2 - 9 * ratio);
+      ctx.lineTo(x2, y2 - 9 * ratio);
+      ctx.stroke();
+
+      ctx.fillStyle = "#1f2a2e";
+      const adjacentLabel = state.mode === "elevation" || state.mode === "depression"
+        ? "horizontal distance = " + formatNumber(values.adjacent) + " m"
+        : "adjacent = " + formatNumber(values.adjacent);
+      const oppositeLabel = state.mode === "elevation"
+        ? "height = " + formatNumber(values.opposite) + " m"
+        : state.mode === "depression"
+        ? "drop = " + formatNumber(values.opposite) + " m"
+        : "opposite = " + formatNumber(values.opposite);
+
+      const adjacentWidth = ctx.measureText(adjacentLabel).width;
+      const adjacentX = Math.max(18 * ratio, x1 + run / 2 - adjacentWidth / 2);
+      const sideMidX = (x2 + x3) / 2;
+      const sideMidY = (y2 + y3) / 2;
+      const sideDx = x3 - x2;
+      const sideDy = y3 - y2;
+      const sideLength = Math.max(Math.hypot(sideDx, sideDy), 1);
+      const normalX = -sideDy / sideLength;
+      const normalY = sideDx / sideLength;
+      const normalScale = values.angle >= 68 ? 54 * ratio : 28 * ratio;
+      const oppositeX = sideMidX + normalX * normalScale;
+      const oppositeY = sideMidY + normalY * normalScale;
+
+      ctx.fillText(adjacentLabel, adjacentX, y1 + 34 * ratio);
+      ctx.fillText(oppositeLabel, oppositeX, oppositeY);
+
+      const adjacentDirection = Math.atan2(y2 - y1, x2 - x1);
+      const hypotenuseDirection = Math.atan2(y3 - y1, x3 - x1);
+      const arcStart = Math.min(adjacentDirection, hypotenuseDirection);
+      const arcEnd = Math.max(adjacentDirection, hypotenuseDirection);
+
+      if (state.mode !== "depression") {
+        ctx.strokeStyle = "#d95d39";
+        ctx.beginPath();
+        ctx.arc(x1, y1, 15 * ratio, arcStart, arcEnd, false);
+        ctx.stroke();
+        ctx.fillStyle = "#d95d39";
+        const midAngle = (arcStart + arcEnd) / 2;
+        const angleRadius = values.angle >= 68 ? 24 * ratio : 20 * ratio;
+        const angleLabelX = x1 + Math.cos(midAngle) * angleRadius;
+        const angleLabelY = y1 + Math.sin(midAngle) * angleRadius;
+        ctx.fillText(formatNumber(values.angle) + String.fromCharCode(176), angleLabelX, angleLabelY);
+      }
+
+      if (state.mode === "elevation") {
+        ctx.fillStyle = "#1f2a2e";
+        ctx.save();
+        ctx.translate(x1 + run * 0.42, y1 - rise * 0.42);
+        ctx.rotate(-Math.atan2(rise, run));
+        ctx.fillText("angle of elevation", -18 * ratio, -10 * ratio);
+        ctx.restore();
+      } else if (state.mode === "depression") {
+        ctx.strokeStyle = "#d95d39";
+        ctx.beginPath();
+        ctx.moveTo(x3 - 60 * ratio, y3);
+        ctx.lineTo(x3 + 70 * ratio, y3);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x3, y3, 24 * ratio, Math.PI - degToRad(values.angle), Math.PI, false);
+        ctx.stroke();
+        ctx.fillStyle = "#d95d39";
+        ctx.fillText(formatNumber(values.angle) + String.fromCharCode(176), x3 - 44 * ratio, y3 + 18 * ratio);
+        ctx.fillStyle = "#1f2a2e";
+        ctx.fillText("angle of depression", x3 - 130 * ratio, y3 - 32 * ratio);
+      }
+    }
+
+    function refresh() {
+      const values = getComputedValues();
+      syncControls(values);
+      updateText(values);
+      drawTriangle(values);
+    }
+
+    function setScenario(name) {
+      state = { ...scenarios[name] };
+      refresh();
+    }
+
+    elements.modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        state.mode = button.dataset.mode;
+        refresh();
+      });
+    });
+
+    elements.scenarioButtons.forEach((button) => {
+      button.addEventListener("click", () => setScenario(button.dataset.scenario));
+    });
+
+    elements.angleRange.addEventListener("input", (event) => {
+      state.angle = Number(event.target.value);
+      refresh();
+    });
+
+    elements.adjacentRange.addEventListener("input", (event) => {
+      state.adjacent = Number(event.target.value);
+      refresh();
+    });
+
+    elements.oppositeRange.addEventListener("input", (event) => {
+      state.opposite = Number(event.target.value);
+      refresh();
+    });
+
+    window.addEventListener("resize", refresh);
+
+    refresh();
+  </script>
+</body>
+</html>
